@@ -1,0 +1,72 @@
+<p><link href="../swiss.css" rel=stylesheet></link></p>
+
+<h1>Assignment 4: Implementing a model from the literature.</h1>
+
+<h2>Description, Data, Code, and Resources</h2>
+
+<p>In this assignment you will implement a deep learning model from the literature,
+and write a report on the process of doing so.</p>
+
+<p>This will provide you experience in:</p>
+
+<ol>
+<li>Reading deep learning papers and understanding how models are described.</li>
+<li>Implementing models from someone else's work.</li>
+<li>Reporting on your work.</li>
+</ol>
+
+<p>You will implement an ``Natural Language Inference'' model, based on the Stanford SNLI dataset.
+The dataset page is <a href="https://nlp.stanford.edu/projects/snli/">https://nlp.stanford.edu/projects/snli/</a>.
+It describes the dataset and the task.</p>
+
+<p>Besides the dataset, there is also a leaderboard, listing various works on that dataset, and the
+scores they obtained. Choose any work that achieved > 84 percent accuracy on the test set, and replicate it.</p>
+
+<p>Some models take longer to train than others. Some require a GPU to train in a reasonable time.
+Some have many moving parts, some have less.
+Take this into account when choosing what to implement.</p>
+
+<p>Some models have code available on the web. Naturally, you cannot use such code directly, you need to implement from scratch in Pytorch, DyNet or TensorFlow. You can look at existing code to understand specific details, but the final code should be your own reimplementation of the model.</p>
+
+<p>Instead of SNLI, you may choose another model from the literature, based on Yoav's approval. Send me the suggested paper on a private message in Piazza, and I will judge if it is an interesting/complex enough model for the assignment.</p>
+
+<h2>Piazza</h2>
+
+<p>If you have questions, please use the Piazza Q&amp;A forum. I will not be answering
+questions over email.</p>
+
+<h2>How and What to submit?</h2>
+
+<p>Submit using the <a href="http://submit.cs.biu.ac.il/">submission system</a>. All the text/PDF files should include your ID and username in a clear location.</p>
+
+<p>You need to submit all your code, a plain-text (ASCII) <code>README</code> file explaining how to run your code in order to replicate your best result,
+and a PDF file called <code>report.pdf</code> describing your implementation and results.</p>
+
+<p>Your grade will be based mostly on the report, so make sure it contains enough details in order to be graded properly.</p>
+
+<p>At a minimum, it should describe:</p>
+
+<ul>
+<li>Which paper you chose the implement.</li>
+<li>Why you chose that particular one.</li>
+<li>What method was used in the paper?</li>
+<li>What was the result reported in the paper.</li>
+<li>Did your code manage to replicate this result?</li>
+<li>What was your performance on that dataset (how does your report compare to theirs)?
+<ul>
+<li>Report your accuracies on the train and test sets, and your learning curve graphs</li>
+</ul></li>
+<li>What was involved in replcating the result? 
+<ul>
+<li>If you tried several hyperparameters, or several approaches, describe them, and what was the result of each.</li>
+<li>If you didn't manage to replicate the result, describe your attempts in details.
+<ul>
+<li>"I tried really hard and couldn't make it to work" is not a proper answer.</li>
+<li>"I tried A and B and C and D, and I got such as and such results from them, and then I tried E and ..." etc, is good.</li>
+</ul></li>
+</ul></li>
+<li>What worked straightforward out of the box? what didn't work?</li>
+<li>Are there any improvements to the algorithm you can think about?</li>
+</ul>
+
+<h2>Good luck!</h2>
