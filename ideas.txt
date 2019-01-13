@@ -7,3 +7,7 @@ and store it in pikcle file
 // preproecess the embeddings
 bound = math.sqrt(3.0 / emb_size)
 self.embedder.weight.data.uniform_(-1.0 * bound, bound)
+
+xavier
+MLP: layer hidden to hidden
+softmax

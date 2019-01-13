@@ -38,4 +38,4 @@ if __name__ == '__main__':
     vocab = sys.argv[2]
     path = sys.argv[3]
 
-    new_embed = get_matched_embeddings(embedding_path, vocab, path)
+    get_matched_embeddings(embedding_path, vocab, path)

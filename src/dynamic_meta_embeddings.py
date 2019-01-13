@@ -1,22 +1,20 @@
 from __future__ import unicode_literals
 import torch.nn as nn
-from torch.nn.utils.rnn import *
-import torch.nn.functional as F
 from utils import *
 
-EPOCHS = 5
-HIDDEN_RNN = [50, 50]
-CHAR_LSTM = 50
-EMBEDDING = 50
-BATCH_SIZE = 100
-LR = 0.01
-LR_DECAY = 0.5
 EMBEDDING_PROJECTION = 256
 GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 
 
-def get_embedding(pretrained_embedding, embedding_size, vocab2id):
+
+
+def get_tensor(sentence, vocab2id):
+    return torch.tensor([vocab2id[word] for word in sentence.split(' ')])
+
+def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
+    pretrained_embedding = load_embedding(pretrained_embedding_path)
+
     embedding = nn.Embedding(num_embeddings=len(vocab2id), embedding_dim=embedding_size)
     data = embedding.weight.data
     for word, id in vocab2id.items():
@@ -30,33 +28,35 @@ def get_embedding(pretrained_embedding, embedding_size, vocab2id):
 
 
 class UnweightedDME(nn.Module):
-    def __init__(self, glove_path, fast_text_path, vocab2id):
+    def __init__(self, glove_path, fast_text_path, vocab2id_path):
         super(UnweightedDME, self).__init__()
-        self.glove = get_embedding(glove_path, GLOVE_DIM, vocab2id)
-        self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, vocab2id)
+        self.vocab2id = get_vocab2id(vocab2id_path)
+        self.glove = get_embedding(glove_path, GLOVE_DIM, self.vocab2id)
+        self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
         self.P_fast_text = nn.Linear(FAST_TEXT_DIM, EMBEDDING_PROJECTION)
 
-    def forward(self, word):
-        emb_glove = self.glove(word)
-        emb_fast_text = self.fast_text(word)
+    def forward(self, sentence):
+        ids = get_tensor(sentence, self.vocab2id)
+        emb_glove = self.glove(ids)
+        emb_fast_text = self.fast_text(ids)
         out_glove = self.P_glove(emb_glove)
         out_fast_text = self.P_fast_text(emb_fast_text)
         stacked = torch.stack([out_glove, out_fast_text])
-        output = torch.sum(stacked)
+        output = torch.sum(stacked, dim=0)
         return output
 
 
 if __name__ == '__main__':
 
-    glove_path = '../checkpoints/cache/glove.840B.300d.txt.pkl'
-    glove_embedding = load_embedding(glove_path)
-
-    fast_text_path = '../checkpoints/cache/glove.840B.300d.txt.pkl'
-    fast_text_embedding = load_embedding(glove_path)
-
+    glove_path = '../checkpoints/cache/matched_glove.pkl'
+    fast_text_path = '../checkpoints/cache/matched_crawl.pkl'
     vocab_path = '../checkpoints/cache/vocab.pkl'
-    vocab2id = get_vocab2id(vocab_path)
 
-    unweighted = UnweightedDME(glove_path, fast_text_path, vocab2id)
+    unweighted = UnweightedDME(glove_path, fast_text_path, vocab_path)
+
+    sentence = 'I eat an apple'
+
+    ids = get_tensor(sentence, vocab2id)
+    out = unweighted(ids)
 
