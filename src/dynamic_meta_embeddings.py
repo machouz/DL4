@@ -50,8 +50,13 @@ class UnweightedDME(nn.Module):
 if __name__ == '__main__':
 
     glove_path = '../checkpoints/cache/glove.840B.300d.txt.pkl'
-    pretrained_embedding = load_embedding(glove_path)
+    glove_embedding = load_embedding(glove_path)
+
+    fast_text_path = '../checkpoints/cache/glove.840B.300d.txt.pkl'
+    fast_text_embedding = load_embedding(glove_path)
 
     vocab_path = '../checkpoints/cache/vocab.pkl'
     vocab2id = get_vocab2id(vocab_path)
+
+    unweighted = UnweightedDME(glove_path, fast_text_path, vocab2id)
 

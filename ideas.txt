@@ -1,7 +1,8 @@
-pickle the embeddings one time
-
+pickle the embeddings one time, only words appear in the corpus
 keep only words appear in the train/dev/test
 and store it in pikcle file
+
+// corpus, keep only sentence1 and sentence2
 
 // preproecess the embeddings
 bound = math.sqrt(3.0 / emb_size)
