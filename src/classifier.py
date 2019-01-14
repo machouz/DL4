@@ -1,15 +1,8 @@
 from __future__ import unicode_literals
-import torch.nn as nn
-from utils import *
-import time
+
+import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import *
-import torch.optim as optim
-import torch.nn.functional as F
-import sys
-import torch
-
-
 
 
 class MLP(nn.Module):
@@ -25,7 +18,9 @@ class MLP(nn.Module):
             nn.Dropout(p=dropout),
             nn.Linear(hidden_layer, tagset_size),
         )
-
+        if torch.cuda.is_available():
+            print("Cuda available")
+            self.classifier.cuda()
 
 
     def forward(self, encoded, batch=True):
