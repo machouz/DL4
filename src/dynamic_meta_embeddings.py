@@ -25,7 +25,7 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
 
 
 class UnweightedDME(nn.Module):
-    def __init__(self, glove_path, fast_text_path, vocab2id_path):
+    def __init__(self, glove_path, fast_text_path):
         super(UnweightedDME, self).__init__()
         self.glove = get_embedding(glove_path, GLOVE_DIM, self.vocab2id)
         self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
@@ -55,6 +55,5 @@ class UnweightedDME(nn.Module):
 if __name__ == '__main__':
     glove_path = 'checkpoints/cache/matched_glove.pkl'
     fast_text_path = 'checkpoints/cache/matched_crawl.pkl'
-    vocab_path = 'checkpoints/cache/vocab.pkl'
 
-    unweighted = UnweightedDME(glove_path, fast_text_path, vocab_path)
+    unweighted = UnweightedDME(glove_path, fast_text_path)

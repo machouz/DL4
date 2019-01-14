@@ -32,7 +32,7 @@ class SNLI(nn.Module):
     def __init__(self):
         super(SNLI, self).__init__()
 
-        self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH, VOCAB_PATH)
+        self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH)
         self.encoder = Encoder(EMBEDDING_PROJECTION, LSTM_DIM)
         self.classifier = MLP(2 * 4 * LSTM_DIM, MLP_HIDDEN_LAYER, DROPOUT, TAGSET_SIZE)
 
