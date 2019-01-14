@@ -11,6 +11,7 @@ from torchtext import data
 import sys
 from SNLI import SNLI
 import torch.optim as optim
+import time
 
 BATCH_SIZE = 64
 EPOCHS = 10
@@ -125,7 +126,8 @@ if __name__ == '__main__':
 
     for epoch in range(1, EPOCHS + 1):
         model.train()
-        print(epoch)
+        print("Epoch : {}".format(epoch))
+        batch_loss = 0
         for id, batch in enumerate(train_iter):
             optimizer.zero_grad()
             preds = model(batch.hypothesis, batch.premise)
@@ -133,10 +135,12 @@ if __name__ == '__main__':
             if torch.cuda.is_available():
                 target = target.cuda()
             loss = criterion(preds, target)
+            batch_loss += float(loss.item())
             loss.backward()
             optimizer.step()
-            if id % 1000 == 0:
-                print(loss)
+            if id % 100 == 0 and id > 0:
+                print("{} : ,Average loss : {} , id : {}".format(batch_loss / 100, id, time.strftime('%x %X')))
+                batch_loss = 0
 
         print("Train")
         evaluate(train_iter, model)
