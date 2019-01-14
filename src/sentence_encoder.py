@@ -1,14 +1,8 @@
 from __future__ import unicode_literals
-import torch.nn as nn
-from utils import *
-import time
+
+import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import *
-import torch.optim as optim
-import torch.nn.functional as F
-import sys
-import torch
-
 
 
 class Encoder(nn.Module):
@@ -20,8 +14,7 @@ class Encoder(nn.Module):
         self.init_hidden()
         if torch.cuda.is_available():
             print("Cuda available")
-            self.hidden[0].cuda()
-            self.hidden[1].cuda()
+            self.lstm.cuda()
 
     def init_hidden(self, batch_size=1):
         # Before we've done anything, we dont have any hidden state.

@@ -1,15 +1,8 @@
 from __future__ import unicode_literals
-import torch.nn as nn
-from utils import *
-import time
+
+import torch
 import torch.nn as nn
 from torch.nn.utils.rnn import *
-import torch.optim as optim
-import torch.nn.functional as F
-import sys
-import torch
-
-
 
 
 class MLP(nn.Module):
