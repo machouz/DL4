@@ -35,7 +35,12 @@ class UnweightedDME(nn.Module):
         self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
         self.P_fast_text = nn.Linear(FAST_TEXT_DIM, EMBEDDING_PROJECTION)
-
+        if torch.cuda.is_available():
+            print("Cuda available")
+            self.glove.cuda()
+            self.fast_text.cuda()
+            self.P_glove.cuda()
+            self.P_fast_text.cuda()
 
         self.glove.weight.requires_grad = False
         self.fast_text.weight.requires_grad = False

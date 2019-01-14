@@ -17,8 +17,11 @@ class Encoder(nn.Module):
 
         self.hidden_lstm = hidden_lstm
         self.lstm = nn.LSTM(embedding_dim, hidden_lstm, bidirectional=True, batch_first=True)
-
         self.init_hidden()
+        if torch.cuda.is_available():
+            print("Cuda available")
+            self.hidden[0].cuda()
+            self.hidden[1].cuda()
 
     def init_hidden(self, batch_size=1):
         # Before we've done anything, we dont have any hidden state.

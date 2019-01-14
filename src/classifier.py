@@ -25,7 +25,9 @@ class MLP(nn.Module):
             nn.Dropout(p=dropout),
             nn.Linear(hidden_layer, tagset_size),
         )
-
+        if torch.cuda.is_available():
+            print("Cuda available")
+            self.classifier.cuda()
 
 
     def forward(self, encoded, batch=True):
