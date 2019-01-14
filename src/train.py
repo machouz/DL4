@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import numpy as np
+from utils import *
 
 import torch
 import torch.nn as nn
@@ -16,11 +16,17 @@ BATCH_SIZE = 64
 EPOCHS = 10
 LEARNING_RATE = 0.004
 
+VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/datasets/snli/snli_1.0'
 TRAIN_PATH = sys.argv[2] if len(sys.argv) > 2 else 'snli_1.0_train.tokenized.prep.json'
 VAL_PATH = sys.argv[3] if len(sys.argv) > 2 else 'snli_1.0_dev.tokenized.prep.json'
 TEST_PATH = sys.argv[4] if len(sys.argv) > 2 else 'snli_1.0_test.tokenized.prep.json'
 
+def get_tensor(sentence, vocab2id):
+    ten = torch.tensor([vocab2id[word] for word in sentence])
+    if torch.cuda.is_available():
+        ten = ten.cuda()
+    return ten
 
 def get_data(root_path, train_path, val_path, test_path):
     text_field = data.Field(include_lengths=True, init_token='<s>', eos_token='</s>')
@@ -83,6 +89,7 @@ if __name__ == '__main__':
 
     text_field.build_vocab(train, val, test)
     label_field.build_vocab(train)
+    vocab2id = get_vocab2id(VOCAB_PATH)
 
     '''
     train_iter, val_iter, test_iter = data.BucketIterator.splits((train, val, test), batch_size=BATCH_SIZE, repeat=False)

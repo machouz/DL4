@@ -16,7 +16,6 @@ from sentence_encoder import *
 
 GLOVE_PATH = 'checkpoints/cache/matched_glove.pkl'
 FAST_TEXT_PATH = 'checkpoints/cache/matched_crawl.pkl'
-VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 EMBEDDING_PROJECTION = 256

@@ -7,12 +7,6 @@ GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 
 
-def get_tensor(sentence, vocab2id):
-    ten = torch.tensor([vocab2id[word] for word in sentence])
-    if torch.cuda.is_available():
-        ten = ten.cuda()
-    return ten
-
 
 def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
     pretrained_embedding = load_embedding(pretrained_embedding_path)
@@ -32,7 +26,6 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
 class UnweightedDME(nn.Module):
     def __init__(self, glove_path, fast_text_path, vocab2id_path):
         super(UnweightedDME, self).__init__()
-        self.vocab2id = get_vocab2id(vocab2id_path)
         self.glove = get_embedding(glove_path, GLOVE_DIM, self.vocab2id)
         self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
@@ -47,8 +40,7 @@ class UnweightedDME(nn.Module):
         self.glove.weight.requires_grad = False
         self.fast_text.weight.requires_grad = False
 
-    def forward(self, sentence):
-        ids = get_tensor(sentence, self.vocab2id)
+    def forward(self, ids):
         emb_glove = self.glove(ids)
         emb_fast_text = self.fast_text(ids)
         out_glove = self.P_glove(emb_glove)
