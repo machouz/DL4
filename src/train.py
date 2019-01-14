@@ -11,6 +11,7 @@ from torchtext import data
 import sys
 from SNLI import SNLI
 import torch.optim as optim
+import time
 
 BATCH_SIZE = 64
 EPOCHS = 10
@@ -136,7 +137,7 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             if id % 100 == 0 and id > 0:
-                print("Average loss : {} , id : {}".format(batch_loss / 100, id))
+                print("{} : ,Average loss : {} , id : {}".format(batch_loss / 100, id, time.strftime('%x %X')))
                 batch_loss = 0
 
         print("Train")
