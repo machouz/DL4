@@ -114,5 +114,4 @@ if __name__ == '__main__':
             loss = criterion(preds.unsqueeze(0), torch.tensor([labels2id[sample.label]]))
             optimizer.step()
 
-            if id % 10000 == 1:
-                print(loss)
+            print(loss)
