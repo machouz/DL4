@@ -97,8 +97,10 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    labels2id = {u'neutral': 0, u'entailment': 1, u'contradiction': 2}
+    labels2id = label_field.vocab.stoi
     id2label = {i: l for l, i in labels2id.items()}
+
+
     for epoch in range(1, EPOCHS + 1):
         model.train()
 

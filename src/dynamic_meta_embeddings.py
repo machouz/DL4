@@ -27,7 +27,6 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
         else:
             data[id] = 0
 
-    embedding.cuda()
     return embedding
 
 
@@ -39,6 +38,7 @@ class UnweightedDME(nn.Module):
         self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
         self.P_fast_text = nn.Linear(FAST_TEXT_DIM, EMBEDDING_PROJECTION)
+
         if torch.cuda.is_available():
             print("Cuda available")
             self.glove.cuda()
