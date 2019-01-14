@@ -4,7 +4,10 @@ from torchtext import data
 
 def load_embedding(path):
     with open(path, 'rb') as e:
-        embedding = pickle.load(e, encoding='bytes')
+        if torch.cuda.is_available():
+            embedding = pickle.load(e, encoding='bytes')
+        else:
+            embedding = pickle.load(e)
     return embedding
 
 
