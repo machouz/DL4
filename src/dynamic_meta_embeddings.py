@@ -24,6 +24,8 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
             data[id] = pretrained_embedding[word.lower()].mean(0)
         else:
             data[id] = 0
+
+    embedding.cuda()
     return embedding
 
 
