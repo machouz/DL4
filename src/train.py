@@ -76,14 +76,14 @@ def evaluate(data_iter, model):
         optimizer.zero_grad()
         output = model(batch.hypothesis, batch.premise)
         target = batch.label - 1
-        pred = output.max(1, keepdim=True)[1]
+        pred = (torch.max(output, 1)[1].view(batch.label.size()).data == (batch.label.data - 1)).sum()
         if torch.cuda.is_available():
             correct += (pred == target).cuda().sum().item()
         else:
             correct += (pred == target).cpu().sum().item()
         count += batch.label.shape[-1]
 
-        print("Accuracy: {}".format(correct/count))
+    print("Accuracy: {}".format(correct/count))
 
 
 if __name__ == '__main__':
@@ -121,6 +121,8 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
+
+
     for epoch in range(1, EPOCHS + 1):
         model.train()
         print(epoch)
@@ -133,7 +135,7 @@ if __name__ == '__main__':
             loss = criterion(preds, target)
             loss.backward()
             optimizer.step()
-            if id % 100 == 0:
+            if id % 1000 == 0:
                 print(loss)
 
         print("Train")
