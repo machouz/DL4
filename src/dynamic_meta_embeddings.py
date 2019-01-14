@@ -10,7 +10,7 @@ FAST_TEXT_DIM = 300
 
 
 def get_tensor(sentence, vocab2id):
-    return torch.tensor([vocab2id[word] for word in sentence.split(' ')])
+    return torch.tensor([vocab2id[word] for word in sentence])
 
 def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
     pretrained_embedding = load_embedding(pretrained_embedding_path)
@@ -36,6 +36,11 @@ class UnweightedDME(nn.Module):
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
         self.P_fast_text = nn.Linear(FAST_TEXT_DIM, EMBEDDING_PROJECTION)
 
+
+        self.glove.weight.requires_grad = False
+        self.fast_text.weight.requires_grad = False
+
+
     def forward(self, sentence):
         ids = get_tensor(sentence, self.vocab2id)
         emb_glove = self.glove(ids)
@@ -49,14 +54,10 @@ class UnweightedDME(nn.Module):
 
 if __name__ == '__main__':
 
-    glove_path = '../checkpoints/cache/matched_glove.pkl'
-    fast_text_path = '../checkpoints/cache/matched_crawl.pkl'
-    vocab_path = '../checkpoints/cache/vocab.pkl'
+    glove_path = 'checkpoints/cache/matched_glove.pkl'
+    fast_text_path = 'checkpoints/cache/matched_crawl.pkl'
+    vocab_path = 'checkpoints/cache/vocab.pkl'
 
     unweighted = UnweightedDME(glove_path, fast_text_path, vocab_path)
 
-    sentence = 'I eat an apple'
-
-    ids = get_tensor(sentence, vocab2id)
-    out = unweighted(ids)
 
