@@ -12,6 +12,8 @@ class Encoder(nn.Module):
         self.hidden_lstm = hidden_lstm
         self.lstm = nn.LSTM(embedding_dim, hidden_lstm, bidirectional=True)
         self.init_hidden()
+
+        #torch.nn.init.orthogonal_(self.lstm)
         if torch.cuda.is_available():
             print("Cuda available")
             self.lstm.cuda()
@@ -21,6 +23,7 @@ class Encoder(nn.Module):
         # Refer to the Pytorch documentation to see exactly
         # why they have this dimensionality.
         # The axes semantics are (num_layers, minibatch_size, hidden_dim)
+
         self.hidden = (torch.randn(2, batch_size, self.hidden_lstm),
                         torch.randn(2, batch_size, self.hidden_lstm))
 
