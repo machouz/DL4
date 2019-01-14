@@ -13,7 +13,7 @@ from classifier import *
 from dynamic_meta_embeddings import *
 from sentence_encoder import *
 
-
+VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 GLOVE_PATH = 'checkpoints/cache/matched_glove.pkl'
 FAST_TEXT_PATH = 'checkpoints/cache/matched_crawl.pkl'
 GLOVE_DIM = 300
@@ -29,22 +29,22 @@ TAGSET_SIZE = 3
 
 class SNLI(nn.Module):
 
-    def __init__(self):
+    def __init__(self, vocab2id):
         super(SNLI, self).__init__()
 
-        self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH, VOCAB_PATH)
+        self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH, vocab2id)
         self.encoder = Encoder(EMBEDDING_PROJECTION, LSTM_DIM)
         self.classifier = MLP(2 * 4 * LSTM_DIM, MLP_HIDDEN_LAYER, DROPOUT, TAGSET_SIZE)
 
 
 
-    def forward(self, hypothesis, premise):
-        u = self.embedding(hypothesis)
-        u = self.encoder(u)
-        v = self.embedding(premise)
-        v = self.encoder(v)
+    def forward(self, premise, hypothesis):
+        u = self.embedding(premise[0])
+        u = self.encoder(u, premise[1])
+        v = self.embedding(hypothesis[0])
+        v = self.encoder(v, hypothesis[1])
 
-        m = torch.cat([u, v, (u - v).abs(), u * v])
+        m = torch.cat([u, v, (u - v).abs(), u * v], dim=1)
         output = self.classifier(m)
         return output
 

@@ -7,6 +7,7 @@ and store it in pikcle file
 // preproecess the embeddings
 bound = math.sqrt(3.0 / emb_size)
 self.embedder.weight.data.uniform_(-1.0 * bound, bound)
+mean 0
 
 xavier
 MLP: layer hidden to hidden
@@ -16,4 +17,4 @@ softmax
 train
 
 unknown words - preprocess the vocab with words appear at least in one of the embeddings
-drop data with label = '-'
+remove data with label = '-'

@@ -15,9 +15,9 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
     data = embedding.weight.data
     for word, id in vocab2id.items():
         if word in pretrained_embedding:
-            data[id] = pretrained_embedding[word].mean(0)
+            data[id] = pretrained_embedding[word]
         elif word.lower() in pretrained_embedding:
-            data[id] = pretrained_embedding[word.lower()].mean(0)
+            data[id] = pretrained_embedding[word.lower()]
         else:
             data[id] = 0
 
@@ -25,8 +25,9 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
 
 
 class UnweightedDME(nn.Module):
-    def __init__(self, glove_path, fast_text_path, vocab2id_path):
+    def __init__(self, glove_path, fast_text_path, vocab2id):
         super(UnweightedDME, self).__init__()
+        self.vocab2id = vocab2id
         self.glove = get_embedding(glove_path, GLOVE_DIM, self.vocab2id)
         self.fast_text = get_embedding(fast_text_path, FAST_TEXT_DIM, self.vocab2id)
         self.P_glove = nn.Linear(GLOVE_DIM, EMBEDDING_PROJECTION)
