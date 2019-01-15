@@ -89,7 +89,7 @@ def evaluate(data_iter, model, type):
         count += batch.label.shape[-1]
 
     acc = correct / count
-    print("Accuracy on the {}: {}".format(type, acc))
+    print("{} - Accuracy on the {}: {}".format(time.strftime('%x %X'), type, acc))
 
 
 if __name__ == '__main__':
@@ -142,9 +142,9 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             if id % 100 == 0 and id > 0:
-                print("{} - Average loss : {} - id : {}".format(time.strftime('%x %X'), batch_loss / BATCH_SIZE, id * BATCH_SIZE))
+                print("{} - Average loss : {} - id : {}".format(time.strftime('%x %X'), batch_loss / BATCH_SIZE,
+                                                                id * BATCH_SIZE))
                 batch_loss = 0
-
 
         evaluate(train_iter, model, 'train')
         evaluate(val_iter, model, 'dev')

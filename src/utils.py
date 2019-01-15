@@ -1,6 +1,5 @@
 from six.moves import cPickle as pickle
 import torch
-from torchtext import data
 
 def load_embedding(path):
     with open(path, 'rb') as e:
