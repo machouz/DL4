@@ -14,7 +14,7 @@ from torchtext import data
 
 BATCH_SIZE = 64
 EPOCHS = 10
-LEARNING_RATE = 0.004
+LEARNING_RATE = 0.0004
 
 VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/datasets/snli/snli_1.0'
