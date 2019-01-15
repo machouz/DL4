@@ -127,7 +127,6 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-
     for epoch in range(1, EPOCHS + 1):
         model.train()
         print("Epoch : {}".format(epoch))
@@ -143,10 +142,10 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
             if id % 100 == 0 and id > 0:
-                print("{} : ,Average loss : {} , id : {}".format(batch_loss / 100, id, time.strftime('%x %X')))
+                print("{} - Average loss : {} - id : {}".format(time.strftime('%x %X'), batch_loss / BATCH_SIZE, id * BATCH_SIZE))
                 batch_loss = 0
 
-        
+
         evaluate(train_iter, model, 'train')
         evaluate(val_iter, model, 'dev')
         evaluate(test_iter, model, 'test')
