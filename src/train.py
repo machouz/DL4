@@ -47,7 +47,7 @@ def get_data(root_path, train_path, val_path, test_path):
 
 def get_batchs(model, train, val, test):
     train_iter, val_iter, test_iter = data.BucketIterator.splits((train, val, test), batch_size=BATCH_SIZE,
-                                                                 repeat=False)
+                                                                 repeat=False, sort=False)
 
     train_iter.shuffle = True
     val_iter.shuffle = False
@@ -70,21 +70,26 @@ def train(model, train_iter, dev_iter, test_iter):
             optimizer.step()
 
 
-def evaluate(data_iter, model):
+def evaluate(data_iter, model, type):
     correct = count = 0.0
     model.eval()
-    for id, batch in enumerate(data_iter):
+    for batch in data_iter:
         optimizer.zero_grad()
         output = model(batch.hypothesis, batch.premise)
         target = batch.label - 1
-        pred = (torch.max(output, 1)[1].view(batch.label.size()).data == (batch.label.data - 1)).sum()
+        correct_prediction = (torch.max(output, 1)[1].view(batch.label.size()).data == target).sum()
+        correct += float(correct_prediction.item())
+        '''
         if torch.cuda.is_available():
-            correct += (pred == target).cuda().sum().item()
+            correct += float(pred.item())
         else:
             correct += (pred == target).cpu().sum().item()
+            
+        '''
         count += batch.label.shape[-1]
 
-    print("Accuracy: {}".format(correct/count))
+    acc = correct / count
+    print("Accuracy on the {}: {}".format(type, acc))
 
 
 if __name__ == '__main__':
@@ -107,11 +112,11 @@ if __name__ == '__main__':
 
     if torch.cuda.is_available():
         train_iter, val_iter, test_iter = data.BucketIterator.splits((train, val, test), batch_size=BATCH_SIZE,
-                                                                     device=torch.device(0), repeat=False)
+                                                                     device=torch.device(0), repeat=False, sort=False)
 
     else:
         train_iter, val_iter, test_iter = data.BucketIterator.splits((train, val, test), batch_size=BATCH_SIZE,
-                                                                     repeat=False)
+                                                                     repeat=False, sort=False)
 
     train_iter.shuffle = True
     val_iter.shuffle = False
@@ -121,7 +126,6 @@ if __name__ == '__main__':
 
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
-
 
 
     for epoch in range(1, EPOCHS + 1):
@@ -142,9 +146,7 @@ if __name__ == '__main__':
                 print("{} : ,Average loss : {} , id : {}".format(batch_loss / 100, id, time.strftime('%x %X')))
                 batch_loss = 0
 
-        print("Train")
-        evaluate(train_iter, model)
-        print("Dev")
-        evaluate(val_iter, model)
-        print("Test")
-        evaluate(test_iter, model)
+        
+        evaluate(train_iter, model, 'train')
+        evaluate(val_iter, model, 'dev')
+        evaluate(test_iter, model, 'test')
