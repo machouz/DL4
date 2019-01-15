@@ -1,13 +1,4 @@
 from __future__ import unicode_literals
-import torch.nn as nn
-from utils import *
-import time
-import torch.nn as nn
-from torch.nn.utils.rnn import *
-import torch.optim as optim
-import torch.nn.functional as F
-import sys
-import torch
 
 from classifier import *
 from dynamic_meta_embeddings import *
@@ -26,7 +17,6 @@ DROPOUT = 0.2
 TAGSET_SIZE = 3
 
 
-
 class SNLI(nn.Module):
 
     def __init__(self, vocab2id):
@@ -35,8 +25,6 @@ class SNLI(nn.Module):
         self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH, vocab2id)
         self.encoder = Encoder(EMBEDDING_PROJECTION, LSTM_DIM)
         self.classifier = MLP(2 * 4 * LSTM_DIM, MLP_HIDDEN_LAYER, DROPOUT, TAGSET_SIZE)
-
-
 
     def forward(self, premise, hypothesis):
         u = self.embedding(premise[0])
@@ -50,7 +38,6 @@ class SNLI(nn.Module):
 
 
 if __name__ == '__main__':
-
     model = SNLI()
     hypothesis = 'Two women are sitting on a blanket near some rocks talking about politics.'
     premise = 'Two women are wandering along the shore drinking iced tea.'

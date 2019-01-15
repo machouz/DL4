@@ -9,7 +9,6 @@ GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 
 
-
 def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
     pretrained_embedding = load_embedding(pretrained_embedding_path)
 
@@ -66,7 +65,6 @@ class UnweightedDME(nn.Module):
         output = F.relu(output)
         output = self.dropout(output)
         return output
-
 
 
 if __name__ == '__main__':

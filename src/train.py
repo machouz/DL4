@@ -3,15 +3,14 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from utils import *
+import sys
+import time
 
 import torch
 import torch.nn as nn
-from torchtext import data
-import sys
-from SNLI import SNLI
 import torch.optim as optim
-import time
+from SNLI import SNLI
+from torchtext import data
 
 BATCH_SIZE = 64
 EPOCHS = 10

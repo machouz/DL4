@@ -1,8 +1,6 @@
-from six.moves import cPickle as pickle
-import torch
-from torchtext import data
 import sys
-import torch.nn as nn
+
+from six.moves import cPickle as pickle
 
 EMBEDDING_SIZE = 300
 
@@ -13,6 +11,7 @@ def get_vocabulary(train, dev, test):
     text_field.build_vocab(train, dev, test, min_freq=1)
     return text_field
 '''
+
 
 def get_matched_embeddings(embedding_path, vocab, path):
     with open(embedding_path, 'rb') as f:
@@ -30,7 +29,6 @@ def get_matched_embeddings(embedding_path, vocab, path):
 
     with open(path, 'wb') as f:
         pickle.dump(new_embed, f, protocol=2)
-
 
 
 if __name__ == '__main__':

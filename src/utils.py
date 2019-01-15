@@ -1,5 +1,6 @@
-from six.moves import cPickle as pickle
 import torch
+from six.moves import cPickle as pickle
+
 
 def load_embedding(path):
     with open(path, 'rb') as e:
@@ -21,5 +22,3 @@ def get_vocab2id(path):
     with open(path, 'rb') as v:
         vocab2id = pickle.load(v)
     return vocab2id
-
-
