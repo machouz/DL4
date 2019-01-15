@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import torch.nn as nn
+import torch.nn.functional as F
 from utils import *
 import math
 
@@ -26,7 +27,7 @@ def get_embedding(pretrained_embedding_path, embedding_size, vocab2id):
 
 
 class UnweightedDME(nn.Module):
-    def __init__(self, glove_path, fast_text_path, vocab2id):
+    def __init__(self, glove_path, fast_text_path, vocab2id, dropout=0.2):
         super(UnweightedDME, self).__init__()
         self.vocab2id = vocab2id
         self.glove = get_embedding(glove_path, GLOVE_DIM, self.vocab2id)
@@ -43,16 +44,17 @@ class UnweightedDME(nn.Module):
         torch.nn.init.xavier_uniform_(self.P_glove.weight)
         torch.nn.init.xavier_uniform_(self.P_fast_text.weight)
 
-
+        self.glove.weight.requires_grad = False
+        self.fast_text.weight.requires_grad = False
+        self.dropout = nn.Dropout(p=dropout)
+        self.dropout.cuda()
         if torch.cuda.is_available():
             print("Cuda available")
             self.glove.cuda()
             self.fast_text.cuda()
             self.P_glove.cuda()
             self.P_fast_text.cuda()
-
-        self.glove.weight.requires_grad = False
-        self.fast_text.weight.requires_grad = False
+            self.dropout.cuda()
 
     def forward(self, ids):
         emb_glove = self.glove(ids)
@@ -61,6 +63,8 @@ class UnweightedDME(nn.Module):
         out_fast_text = self.P_fast_text(emb_fast_text)
         stacked = torch.stack([out_glove, out_fast_text])
         output = torch.sum(stacked, dim=0)
+        output = F.relu(output)
+        output = self.dropout(output)
         return output
 
 
