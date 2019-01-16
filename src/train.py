@@ -3,9 +3,11 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import random
 import sys
 import time
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -13,6 +15,7 @@ from SNLI import SNLI
 from torchtext import data
 from utils import *
 
+SEED = 1234
 BATCH_SIZE = 64
 EPOCHS = 20
 LEARNING_RATE = 0.0004
@@ -26,6 +29,11 @@ TEST_PATH = sys.argv[4] if len(sys.argv) > 2 else 'snli_1.0_test.tokenized.prep.
 VOCAB_EMBED_PATH = 'checkpoints/cache/vocab-fasttext_glove.pkl'
 
 
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
 
 def get_tensor(sentence, vocab2id):
     ten = torch.tensor([vocab2id[word] for word in sentence])
@@ -98,7 +106,15 @@ def evaluate(data_iter, model, type):
 
 
 if __name__ == '__main__':
-
+    print("SEED : {}".format(SEED))
+    print("BATCH_SIZE : {}".format(BATCH_SIZE))
+    print("EPOCHS : {}".format(EPOCHS))
+    print("LEARNING_RATE : {}".format(LEARNING_RATE))
+    print("VOCAB_PATH : {}".format(VOCAB_PATH))
+    print("ROOT_PATH : {}".format(ROOT_PATH))
+    print("TRAIN_PATH : {}".format(TRAIN_PATH))
+    print("VAL_PATH : {}".format(VAL_PATH))
+    print("TEST_PATH : {}".format(TEST_PATH))
     # train, val, test, vocab = get_data(ROOT_PATH, TRAIN_PATH, VAL_PATH, TEST_PATH)
     # train_iter, val_iter, test_iter = get_batchs(train, val, test)
 
@@ -134,17 +150,15 @@ if __name__ == '__main__':
     val_iter.shuffle = False
     test_iter.shuffle = False
 
-    
+
     model = SNLI(text_field.vocab.stoi)
 
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     for epoch in range(1, EPOCHS + 1):
-        print("Epoch : {}".format(epoch))
-        print("Learning rate: {}".format(LEARNING_RATE))
         model.train()
-
+        print("Epoch : {}".format(epoch))
         batch_loss = 0
         for id, batch in enumerate(train_iter):
             optimizer.zero_grad()
