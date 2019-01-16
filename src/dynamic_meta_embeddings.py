@@ -71,7 +71,7 @@ class UnweightedDME(nn.Module):
     def forward(self, ids):
         emb_glove = self.glove(ids)
         emb_fast_text = self.fast_text(ids)
-        emb_levy = self.fast_text(ids)
+        emb_levy = self.levy(ids)
 
         out_glove = self.P_glove(emb_glove)
         out_fast_text = self.P_fast_text(emb_fast_text)
