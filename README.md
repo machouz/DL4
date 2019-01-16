@@ -1,5 +1,5 @@
-#Assignmement 4
-##Implementation of Dynamic Meta-Embeddings for Improved Sentence Representations
+# Assignmement 4
+## Implementation of Dynamic Meta-Embeddings for Improved Sentence Representations
 
 ### Requirements:
 * Python 3.6+
