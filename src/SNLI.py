@@ -6,10 +6,10 @@ from dynamic_meta_embeddings import *
 from sentence_encoder import *
 import numpy as np
 
-VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
-GLOVE_PATH = 'checkpoints/cache/matched_glove.pkl'
-FAST_TEXT_PATH = 'checkpoints/cache/matched_crawl.pkl'
-LEVY_DEP_PATH = 'checkpoints/cache/matched_levy.pkl'
+VOCAB_PATH = 'cache/vocab.pkl'
+GLOVE_PATH = 'cache/matched_glove.pkl'
+FAST_TEXT_PATH = 'cache/matched_crawl.pkl'
+LEVY_DEP_PATH = 'cache/matched_levy.pkl'
 GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 EMBEDDING_PROJECTION = 256

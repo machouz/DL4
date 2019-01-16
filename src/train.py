@@ -21,12 +21,12 @@ EPOCHS = 20
 LEARNING_RATE = 0.0004
 LR_DECAY = 0.5
 
-VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
-ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/datasets/snli/snli_1.0'
+VOCAB_PATH = 'cache/vocab.pkl'
+ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/snli_1.0'
 TRAIN_PATH = sys.argv[2] if len(sys.argv) > 2 else 'snli_1.0_train.tokenized.prep.json'
 VAL_PATH = sys.argv[3] if len(sys.argv) > 2 else 'snli_1.0_dev.tokenized.prep.json'
 TEST_PATH = sys.argv[4] if len(sys.argv) > 2 else 'snli_1.0_test.tokenized.prep.json'
-VOCAB_EMBED_PATH = 'checkpoints/cache/vocab-fasttext_glove.pkl'
+VOCAB_EMBED_PATH = 'cache/vocab-fasttext_glove.pkl'
 
 
 random.seed(SEED)

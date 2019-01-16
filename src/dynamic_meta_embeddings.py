@@ -86,8 +86,8 @@ class UnweightedDME(nn.Module):
 
 
 if __name__ == '__main__':
-    glove_path = 'checkpoints/cache/matched_glove.pkl'
-    fast_text_path = 'checkpoints/cache/matched_crawl.pkl'
-    vocab_path = 'checkpoints/cache/vocab.pkl'
+    glove_path = 'cache/matched_glove.pkl'
+    fast_text_path = 'cache/matched_crawl.pkl'
+    vocab_path = 'cache/vocab.pkl'
 
     unweighted = UnweightedDME(glove_path, fast_text_path, vocab_path)
