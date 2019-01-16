@@ -3,15 +3,18 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import random
 import sys
 import time
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from SNLI import SNLI
 from torchtext import data
 
+SEED = 1234
 BATCH_SIZE = 64
 EPOCHS = 10
 LEARNING_RATE = 0.0004
@@ -21,7 +24,11 @@ ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/datasets/snli/snli_1.0'
 TRAIN_PATH = sys.argv[2] if len(sys.argv) > 2 else 'snli_1.0_train.tokenized.prep.json'
 VAL_PATH = sys.argv[3] if len(sys.argv) > 2 else 'snli_1.0_dev.tokenized.prep.json'
 TEST_PATH = sys.argv[4] if len(sys.argv) > 2 else 'snli_1.0_test.tokenized.prep.json'
-
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
 
 def get_tensor(sentence, vocab2id):
     ten = torch.tensor([vocab2id[word] for word in sentence])
@@ -92,7 +99,15 @@ def evaluate(data_iter, model, type):
 
 
 if __name__ == '__main__':
-
+    print("SEED : {}".format(SEED))
+    print("BATCH_SIZE : {}".format(BATCH_SIZE))
+    print("EPOCHS : {}".format(EPOCHS))
+    print("LEARNING_RATE : {}".format(LEARNING_RATE))
+    print("VOCAB_PATH : {}".format(VOCAB_PATH))
+    print("ROOT_PATH : {}".format(ROOT_PATH))
+    print("TRAIN_PATH : {}".format(TRAIN_PATH))
+    print("VAL_PATH : {}".format(VAL_PATH))
+    print("TEST_PATH : {}".format(TEST_PATH))
     # train, val, test, vocab = get_data(ROOT_PATH, TRAIN_PATH, VAL_PATH, TEST_PATH)
     # train_iter, val_iter, test_iter = get_batchs(train, val, test)
 
