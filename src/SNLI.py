@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
-
+import torch
+import torch.nn as nn
 from classifier import *
 from dynamic_meta_embeddings import *
 from sentence_encoder import *
+import numpy as np
 
 VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 GLOVE_PATH = 'checkpoints/cache/matched_glove.pkl'
@@ -11,11 +13,14 @@ GLOVE_DIM = 300
 FAST_TEXT_DIM = 300
 EMBEDDING_PROJECTION = 256
 
+
 LSTM_DIM = 512
 MLP_HIDDEN_LAYER = 1024
 DROPOUT = 0.2
 TAGSET_SIZE = 3
 
+def count_param_num(nn_module):
+    return np.sum([np.prod(param.size()) for param in nn_module.parameters() if param.requires_grad])
 
 class SNLI(nn.Module):
 
@@ -23,8 +28,10 @@ class SNLI(nn.Module):
         super(SNLI, self).__init__()
 
         self.embedding = UnweightedDME(GLOVE_PATH, FAST_TEXT_PATH, vocab2id)
-        self.encoder = Encoder(EMBEDDING_PROJECTION, LSTM_DIM)
+        self.encoder = Encoder(EMBEDDING_PROJECTION,  LSTM_DIM)
         self.classifier = MLP(2 * 4 * LSTM_DIM, MLP_HIDDEN_LAYER, DROPOUT, TAGSET_SIZE)
+
+        print('model size: {:,}'.format(count_param_num(self)))
 
     def forward(self, premise, hypothesis):
         u = self.embedding(premise[0])

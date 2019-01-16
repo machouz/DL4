@@ -11,16 +11,20 @@ import torch.nn as nn
 import torch.optim as optim
 from SNLI import SNLI
 from torchtext import data
+from utils import *
 
 BATCH_SIZE = 64
-EPOCHS = 10
+EPOCHS = 20
 LEARNING_RATE = 0.0004
+LR_DECAY = 0.5
 
 VOCAB_PATH = 'checkpoints/cache/vocab.pkl'
 ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/datasets/snli/snli_1.0'
 TRAIN_PATH = sys.argv[2] if len(sys.argv) > 2 else 'snli_1.0_train.tokenized.prep.json'
 VAL_PATH = sys.argv[3] if len(sys.argv) > 2 else 'snli_1.0_dev.tokenized.prep.json'
 TEST_PATH = sys.argv[4] if len(sys.argv) > 2 else 'snli_1.0_test.tokenized.prep.json'
+VOCAB_EMBED_PATH = 'checkpoints/cache/vocab-fasttext_glove.pkl'
+
 
 
 def get_tensor(sentence, vocab2id):
@@ -91,12 +95,20 @@ def evaluate(data_iter, model, type):
     print("{} - Accuracy on the {}: {}".format(time.strftime('%x %X'), type, acc))
 
 
+
+
 if __name__ == '__main__':
 
     # train, val, test, vocab = get_data(ROOT_PATH, TRAIN_PATH, VAL_PATH, TEST_PATH)
     # train_iter, val_iter, test_iter = get_batchs(train, val, test)
 
-    text_field = data.Field(include_lengths=True, init_token='<s>', eos_token='</s>')
+    embedded_vocab = get_embeds_vocab(VOCAB_EMBED_PATH)
+
+    def filter_by_emb_vocab(x):
+        return [w for w in x if get_emb_key(w, embedded_vocab)[0] is not None]
+
+
+    text_field = data.Field(include_lengths=True, init_token='<s>', eos_token='</s>', preprocessing=filter_by_emb_vocab)
     label_field = data.Field(sequential=False)
 
     field = {'label': ('label', label_field), 'sentence1': ('premise', text_field),
@@ -108,6 +120,7 @@ if __name__ == '__main__':
     text_field.build_vocab(train, val, test)
     label_field.build_vocab(train)
     # vocab2id = get_vocab2id(VOCAB_PATH)
+
 
     if torch.cuda.is_available():
         train_iter, val_iter, test_iter = data.BucketIterator.splits((train, val, test), batch_size=BATCH_SIZE,
@@ -121,14 +134,17 @@ if __name__ == '__main__':
     val_iter.shuffle = False
     test_iter.shuffle = False
 
+    
     model = SNLI(text_field.vocab.stoi)
 
     criterion = nn.CrossEntropyLoss(reduction='sum')
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     for epoch in range(1, EPOCHS + 1):
-        model.train()
         print("Epoch : {}".format(epoch))
+        print("Learning rate: {}".format(LEARNING_RATE))
+        model.train()
+
         batch_loss = 0
         for id, batch in enumerate(train_iter):
             optimizer.zero_grad()
@@ -144,6 +160,7 @@ if __name__ == '__main__':
                 print("{} - Average loss : {} - id : {}".format(time.strftime('%x %X'), batch_loss / BATCH_SIZE,
                                                                 id * BATCH_SIZE))
                 batch_loss = 0
+
 
         evaluate(train_iter, model, 'train')
         evaluate(val_iter, model, 'dev')
