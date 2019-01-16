@@ -31,6 +31,28 @@ def get_matched_embeddings(embedding_path, vocab, path):
         pickle.dump(new_embed, f, protocol=2)
 
 
+def get_vocabulary(embed1, embed2, embed3, path):
+    with open(embed1, 'rb') as f:
+        embedding1 = pickle.load(f)
+
+    with open(embed2, 'rb') as f:
+        embedding2 = pickle.load(f)
+
+    with open(embed3, 'rb') as f:
+        embedding3 = pickle.load(f)
+
+    vocab = set()
+
+    for embed in [embedding1, embedding2, embedding3]:
+        for word in embed:
+            vocab.add(word)
+
+    with open(path, 'wb') as f:
+        pickle.dump(vocab, f, protocol=2)
+
+
+
+
 if __name__ == '__main__':
     embedding_path = sys.argv[1]
     vocab = sys.argv[2]
