@@ -25,7 +25,7 @@ def get_matched_embeddings(embedding_path, vocab, path):
         if word in embed:
             new_embed[word] = embed[word]
         elif word.lower() in embed:
-            new_embed[word.lower()] = embed[word.lower()]
+            new_embed[word] = embed[word.lower()]
 
     with open(path, 'wb') as f:
         pickle.dump(new_embed, f, protocol=2)
