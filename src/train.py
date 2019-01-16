@@ -21,7 +21,6 @@ EPOCHS = 20
 LEARNING_RATE = 0.0004
 LR_DECAY = 0.5
 
-VOCAB_PATH = 'cache/vocab.pkl'
 ROOT_PATH = sys.argv[1] if len(sys.argv) > 1 else 'data/snli_1.0'
 TRAIN_PATH = sys.argv[2] if len(sys.argv) > 2 else 'snli_1.0_train.tokenized.prep.json'
 VAL_PATH = sys.argv[3] if len(sys.argv) > 2 else 'snli_1.0_dev.tokenized.prep.json'
@@ -110,7 +109,6 @@ if __name__ == '__main__':
     print("BATCH_SIZE : {}".format(BATCH_SIZE))
     print("EPOCHS : {}".format(EPOCHS))
     print("LEARNING_RATE : {}".format(LEARNING_RATE))
-    print("VOCAB_PATH : {}".format(VOCAB_PATH))
     print("ROOT_PATH : {}".format(ROOT_PATH))
     print("TRAIN_PATH : {}".format(TRAIN_PATH))
     print("VAL_PATH : {}".format(VAL_PATH))
